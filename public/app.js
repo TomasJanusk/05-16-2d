@@ -96,7 +96,10 @@ var searchCode = function searchCode() {
     var searchTerm = document.querySelector('.term').value;
     var searchResponse;
     (0,_ajaxService__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
-      return searchResponse = result;
+      searchResponse = result;
+      if (searchResponse.data.length === 0) {
+        alert('Tokio adreso nera');
+      }
     }).then(function () {
       console.log(searchResponse.data[0].post_code);
     }).then(function () {
