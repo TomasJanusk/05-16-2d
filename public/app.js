@@ -50,7 +50,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var form = function form() {
-  return "<div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Jusu adresas:\">\n    </div>\n    <div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly>\n    </div>\n    <button type=\"submit\" class=\"btn btn-primary mb-2\">Ieskoti kodo</button>\n    ";
+  return "<div class=\"form-group mb-2\">\n                <div class=\"error-message\" style=\"color: red; display: none;\">Neteisingai ivestas adresas</div>\n                <input type=\"text\" class=\"form-control term\" placeholder=\"Jusu adresas:\">\n            </div>\n            <div class=\"form-group mb-2\">\n                <input type=\"text\" class=\"form-control result\" readonly>\n            </div>\n            <button type=\"submit\" class=\"btn btn-primary mb-2\">Ieskoti kodo</button>\n            ";
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (form);
 
@@ -94,16 +94,21 @@ var searchCode = function searchCode() {
   document.querySelector('form').addEventListener('submit', function (e) {
     e.preventDefault();
     var searchTerm = document.querySelector('.term').value;
+    var resultElement = document.querySelector('.result');
+    var errorMessageElement = document.querySelector('.error-message');
     var searchResponse;
     (0,_ajaxService__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
       searchResponse = result;
-      if (searchResponse.data.length === 0) {
-        alert('Tokio adreso nera');
+      if (searchResponse.data && searchResponse.data.length > 0) {
+        resultElement.value = searchResponse.data[0].post_code;
+        errorMessageElement.style.display = 'none';
+      } else {
+        resultElement.value = '';
+        errorMessageElement.style.display = 'block';
       }
-    }).then(function () {
-      console.log(searchResponse.data[0].post_code);
-    }).then(function () {
-      document.querySelector('.result').value = searchResponse.data[0].post_code;
+    })["catch"](function () {
+      resultElement.value = '';
+      errorMessageElement.style.display = 'block';
     });
   });
 };
